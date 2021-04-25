@@ -6,7 +6,8 @@
 ### Terraform
 Provision Monitoring Server
 ### Ansible
-Deploy Monitoring Services(Grafana, InfluxDB) to Target VMs
+Deploy & Configure Grafana, InfluxDB to Monitoring Server<br>
+Deploy & Configure Telegraf Agent to Target VMs
 - Copy telegraf.conf to Target VMs
 
 # Usage
