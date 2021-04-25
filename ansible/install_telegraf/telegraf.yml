@@ -28,13 +28,13 @@
           yum:
             name: /usr/local/telegraf-1.18.1-1.x86_64.rpm
             disable_gpg_check: yes
-        - name: Copy telegraf config - Ubuntu
+        - name: Copy telegraf config - CentOS
           copy:
             src: ./config/telegraf.conf
             dest: /etc/telegraf/telegraf.conf
           notify:
           - Restart Telegraf
-        - name: Start Telegraf - Ubuntu
+        - name: Start Telegraf - CentOS
           service:
             name: telegraf
             state: started
