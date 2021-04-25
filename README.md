@@ -4,7 +4,7 @@
 
 # Used Skills
 ### Terraform
-Provisioning Monitoring Server
+Provision Monitoring Server
 ### Ansible
 Deploy & Configure Grafana, InfluxDB to Monitoring Server<br>
 Deploy & Configure Telegraf Agent to Target VMs
