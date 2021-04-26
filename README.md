@@ -50,7 +50,7 @@ Deploy & Configure Telegraf Agent to Target VMs
 7. ansible-playbook telegraf.yml
 ### To-Be
 1. Ansbile -> Dynamic Inventory 사용하여 VM 아이피 정보 동적으로 가져오기
-2. Windows Server에 Telegraf 배포
-3. Target vm들이 SSH Connection, WinRM Connection을 위한 포트 막아놓았는지 확인 하는 과정 추가
-4. Linux 배포판 추가
+2. Windows Server 추가
+3. Linux 배포판 추가
+4. Target vm SSH Connection, WinRM Connection을 위한 포트 막아놓았는지 확인 하는 과정 추가
 5. jinja2 Template사용해서 Config파일 템플릿화
