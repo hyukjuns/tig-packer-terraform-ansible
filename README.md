@@ -1,8 +1,48 @@
 # TIG Monitoring Provision & Configuration v1
-# Description
+## 소개
 <p>v1: 리눅스 머신(Ubuntu, CentOS) Only, 테라폼을 통한 모니터링서버 프로비젼 및 앤서블을 사용한 모니터링 서비스 및 설정 배포</p>
 
-# Used Skills
+## Architecture
+![archi](./images/tig.svg)
+
+## Directory 구조
+```
+/
+.
+├── README.md
+├── ansible
+│   ├── install_grafana_influxdb
+│   │   ├── ansible.cfg
+│   │   ├── config
+│   │   │   ├── grafana.ini
+│   │   │   └── influxdb.conf
+│   │   ├── grafana_influxdb.yml
+│   │   └── inventory.ini
+│   └── install_telegraf
+│       ├── ansible.cfg
+│       ├── config
+│       │   └── telegraf.conf
+│       ├── inventory.ini
+│       └── telegraf.yml
+├── scripts
+│   ├── grafana.sh
+│   ├── influx.sh
+│   └── telegraf.sh
+└── terraform
+    ├── README.md
+    ├── monitor
+    │   ├── main.tf
+    │   ├── output.tf
+    │   ├── terraform.tfvars
+    │   └── vars.tf
+    └── test
+        ├── main.tf
+        ├── output.tf
+        ├── terraform.tfstate
+        ├── terraform.tfvars
+        └── vars.tf
+```
+## Used Skills
 ### Terraform
 Provision Monitoring Server
 ### Ansible
@@ -10,8 +50,8 @@ Deploy & Configure Grafana, InfluxDB to Monitoring Server<br>
 Deploy & Configure Telegraf Agent to Target VMs
 - Copy telegraf.conf to Target VMs
 
-# Usage
-## 1. Provision Monitoring Server
+## Usage
+### 1. Provision Monitoring Server
 1. cd terraform
 2. terraform init
 3. vi terraform.tfvars
@@ -20,8 +60,8 @@ Deploy & Configure Telegraf Agent to Target VMs
     admin_password=<PASSWORD>
     ```
 4. terraform apply
-## 2. Deploy Monitoring Services
-### 2-1. Deploy Grafana & InfluxDB to Monitoring Server
+### 2. Deploy Monitoring Services
+#### 2-1. Deploy Grafana & InfluxDB to Monitoring Server
 1. cd ansible/install_grafana_influxdb
 2. vi inventory.ini
     ```
@@ -29,7 +69,7 @@ Deploy & Configure Telegraf Agent to Target VMs
     <MONITORING_SERVER_PIP>
     ```
 3. ansible-playbook grafana_influxdb.yml
-### 2-2. Deploy Telegraf Agent to Target VMs 
+#### 2-2. Deploy Telegraf Agent to Target VMs 
 1. cd ansible/install_telegraf
 2. vi config/telegraf.conf
     ```
