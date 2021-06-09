@@ -32,10 +32,7 @@
             state: started
             enabled: yes
       when: ansible_distribution == "Ubuntu"
-- name: Print info
-  hosts: target
-  become: true
-  tasks:
-    - name: Show ansible_facts:\ Monitoring Server Private ip
-      debug:
-        var: ansible_facts.default_ipv4.address
+    - block:
+        - name: Install ansible
+          apt:
+            name:  

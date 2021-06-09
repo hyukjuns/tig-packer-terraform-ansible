@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
-      version = "2.56.0"
+      version = "2.60.0"
     }
   }
 }
@@ -13,18 +13,18 @@ provider "azurerm" {
 }
 
 data "azurerm_resource_group" "monitoring_rg" {
-  name     = "monitoring-rg"
+  name     = "monitoring"
 }
 
-data "azurerm_virtual_network" "monitoring_rg_vnet" {
-  name                = "monitoring-rg-vnet"
-  resource_group_name = "monitoring-rg"
+data "azurerm_virtual_network" "monitoring_vnet" {
+  name                = "monitor-vnet"
+  resource_group_name = data.azurerm_resource_group.monitoring_rg.name
 }
 
-data "azurerm_subnet" "monitoring_rg_vnet_subnet" {
+data "azurerm_subnet" "monitoring_vnet_subnet" {
   name                 = "default"
-  virtual_network_name = "monitoring-rg-vnet"
-  resource_group_name  = "monitoring-rg"
+  virtual_network_name = data.azurerm_virtual_network.monitoring_vnet.name
+  resource_group_name  = data.azurerm_resource_group.monitoring_rg.name
 }
 
 # Monitoring Server
@@ -41,8 +41,8 @@ resource "azurerm_network_interface" "monitoring_server_nic" {
   resource_group_name = data.azurerm_resource_group.monitoring_rg.name
 
   ip_configuration {
-    name                          = "internal"
-    subnet_id                     = data.azurerm_subnet.monitoring_rg_vnet_subnet.id
+    name                          = "monitoring-server-nic-ip-config"
+    subnet_id                     = data.azurerm_subnet.monitoring_vnet_subnet.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id = azurerm_public_ip.monitoring_server_pip.id
   }

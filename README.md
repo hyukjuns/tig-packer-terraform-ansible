@@ -60,8 +60,10 @@ Deploy & Configure Telegraf Agent to Target VMs
     admin_password=<PASSWORD>
     ```
 4. terraform apply
+5. output 메모(모니터서버 PIP)
 ### 2. Deploy Monitoring Services
 #### 2-1. Deploy Grafana & InfluxDB to Monitoring Server
+- ansible -m ping monitor 로 연결 확인
 1. cd ansible/install_grafana_influxdb
 2. vi inventory.ini
     ```
