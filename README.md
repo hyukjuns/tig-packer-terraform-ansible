@@ -32,7 +32,7 @@
 
 ### 실행 화면
 1. local에서 terraform apply -> 서버 프로비젼 후 ansible 자동 트리거
-![autotrigger](./images/autotriggering.png)
+![autotrigger](./images/AutoTriggering.png)
 2. monitor server에서 ansible-playbook 실행 -> telegraf agent 배포
 ![deploy_telegraf](./images/deploy_telegraf.png)
 3. Dashboard
