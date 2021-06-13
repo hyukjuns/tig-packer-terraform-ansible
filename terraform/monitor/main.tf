@@ -74,3 +74,28 @@ resource "azurerm_linux_virtual_machine" "monitoring_server" {
     version   = "latest"
   }
 }
+
+resource "null_resource" "make_inventory" {
+  depends_on = [azurerm_linux_virtual_machine.monitoring_server]
+  provisioner "local-exec" {
+    working_dir = "../../ansible/monitor-server"
+    command = <<EOH
+cat <<EOF > inventory.ini
+[monitor]
+${azurerm_linux_virtual_machine.monitoring_server.public_ip_address}
+
+[monitor:vars]
+ansible_user="${var.admin_username}"
+ansible_password="${var.admin_password}"
+EOF
+EOH
+  }
+}
+
+resource "null_resource" "trigger_ansible" {
+  depends_on = [null_resource.make_inventory]
+  provisioner "local-exec" {
+  working_dir =  "../../ansible/monitor-server"
+  command = "./excute_ansible.sh"
+  }
+}

@@ -31,6 +31,14 @@
             name: influxdb
             state: started
             enabled: yes
+        - name:
+          shell: curl "http://localhost:8086/query" --data-urlencode "q=CREATE DATABASE "telegrafdb""
+        - name:
+          shell: curl "http://localhost:8086/query" --data-urlencode "q=CREATE USER mspadmin WITH PASSWORD 'dkagh1.dkagh1.' WITH ALL PRIVILEGES"
+        - name:
+          shell: curl "http://localhost:8086/query" --data-urlencode "q=GRANT ALL PRIVILEGES TO "mspadmin""
+        - name: Set auth-enabled
+          shell: sed -i "s/# auth-enabled = false/auth-enabled = true/g" /etc/influxdb/influxdb.conf
         - name: Update apt-get
           apt:
             update_cache: yes
@@ -43,4 +51,10 @@
         - name: Install ansible
           apt:
             name: ansible
+        - name: mkdir telegraf workspace
+          shell: mkdir /tmp/telegraf
+        - name: Copy telegraf workspace
+          copy:
+            src: ../telegraf/
+            dest: /tmp/telegraf/
       when: ansible_distribution == "Ubuntu"

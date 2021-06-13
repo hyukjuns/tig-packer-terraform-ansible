@@ -1,98 +1,46 @@
-# TIG Monitoring Provision & Configuration v1
-## 소개
-<p>v1: 리눅스 머신(Ubuntu, CentOS) Only, 테라폼을 통한 모니터링서버 프로비젼 및 앤서블을 사용한 모니터링 서비스 및 설정 배포</p>
+# TIG Monitoring Provision & Configuration
+### 소개
+***terraform apply 한번으로 TIG Monitoring Service 배포 및 구성까지***
+<p>Terraform으로 Monitor Server를 생성힘과 동시에 Ansible playbook을 Trigger하여 Monitoring Service를 구성하고 Agent를 배포합니다.</p>
 
-## Architecture
+***전제조건***
+```
+운영중인 Production 환경에 Monitoring서비스를 구축하는 시나리오로 가정,
+따라서 Target Server들과 Vnet,Subnet은 이미 존재하며 그 안에 monitor server를 생성하는 시나리오
+```
+### Diagram
 ![archi](./images/tig.svg)
 
-## Directory 구조
-```
-/
-.
-├── README.md
-├── ansible
-│   ├── install_grafana_influxdb
-│   │   ├── ansible.cfg
-│   │   ├── config
-│   │   │   ├── grafana.ini
-│   │   │   └── influxdb.conf
-│   │   ├── grafana_influxdb.yml
-│   │   └── inventory.ini
-│   └── install_telegraf
-│       ├── ansible.cfg
-│       ├── config
-│       │   └── telegraf.conf
-│       ├── inventory.ini
-│       └── telegraf.yml
-├── scripts
-│   ├── grafana.sh
-│   ├── influx.sh
-│   └── telegraf.sh
-└── terraform
-    ├── README.md
-    ├── monitor
-    │   ├── main.tf
-    │   ├── output.tf
-    │   ├── terraform.tfvars
-    │   └── vars.tf
-    └── test
-        ├── main.tf
-        ├── output.tf
-        ├── terraform.tfstate
-        ├── terraform.tfvars
-        └── vars.tf
-```
-## Used Skills
-### Terraform
-Provision Monitoring Server
-### Ansible
-Deploy & Configure Grafana, InfluxDB to Monitoring Server<br>
-Deploy & Configure Telegraf Agent to Target VMs
-- Copy telegraf.conf to Target VMs
+### Skill Stack
+- ***Terraform 0.14.10***
+- ***Ansible 2.10.7***
+- ***Bash Shell Script***
+### Working Flow
+**Step 1. Provision & Configure Monitor server**
+1. Enter ***terraform apply***
+    - Provisioning Monitor Server(Ubuntu 18.04) (생성 후 자동으로 ansible 실행)
+    - Auto Triggered Ansbile playbook<br>
+        ***Ansible Tasks***
+        - Deploy InfluxDB(+ Create DB and User)
+        - Deploy Grafana
+        - Deploy Ansible Engine(+ Copy Telegraf Workspace to Monitor server)
 
-## Usage
-### 1. Provision Monitoring Server
-1. cd terraform
-2. terraform init
-3. vi terraform.tfvars
-    ```
-    admin_username=<USERNAME>
-    admin_password=<PASSWORD>
-    ```
-4. terraform apply
-5. output 메모(모니터서버 PIP)
-### 2. Deploy Monitoring Services
-#### 2-1. Deploy Grafana & InfluxDB to Monitoring Server
-- ansible -m ping monitor 로 연결 확인
-1. cd ansible/install_grafana_influxdb
-2. vi inventory.ini
-    ```
-    [monitor]
-    <MONITORING_SERVER_PIP>
-    ```
-3. ansible-playbook grafana_influxdb.yml
-#### 2-2. Deploy Telegraf Agent to Target VMs 
-1. cd ansible/install_telegraf
-2. vi config/telegraf.conf
-    ```
-    ...
-    [[outputs.influxdb]]
-    ...
-    urls = ["http://<MONITORING_SERVER_PRIVATEIP>:8086"]
-    database = "<CUSTOMED_DB_NAME>"
-    ...
-    ```
-6. vi inventory.ini
-    ```
-    [target]
-    <TARGET_VM_PIP_01> ansible_user=<VM_USER_NAME> ansible_password=<VM_USER_PASSWORD>
-    <TARGET_VM_PIP_02> ansible_user=<VM_USER_NAME> ansible_password=<VM_USER_PASSWORD>
-    ...
-    ```
-7. ansible-playbook telegraf.yml
+**Step 2. Deploy Telegraf to Target Servers** 
+1. Monitor server 접속
+2. telegraf Workspace - inventory 작업(타겟 private ip 및 user 등록)
+3. Playbook 실행 -> Telegraf Agent 배포 완료
+
+### 실행 화면
+1. local에서 terraform apply -> 서버 프로비젼 후 ansible 자동 트리거
+![autotrigger](./images/autotriggering.png)
+2. monitor server에서 ansible-playbook 실행 -> telegraf agent 배포
+![deploy_telegraf](./images/deploy_telegraf.png)
+3. Dashboard
+![dashboard](./images/dashboard.png)
+![dashboard2](./images/dashboard2.png)
 ### To-Be
-1. Ansbile -> Dynamic Inventory 사용하여 VM 아이피 정보 동적으로 가져오기
-2. Windows Server 추가
-3. Linux 배포판 추가
-4. Target vm SSH Connection, WinRM Connection을 위한 포트 막아놓았는지 확인 하는 과정 추가
-5. jinja2 Template사용해서 Config파일 템플릿화
+1. 기존 운영 중인 서버들에 Ansible User의 root권한 확보방식 구체화
+2. 타겟 OS 추가(Windows, Debian, SUSE)
+3. ansible-galaxy로 role생성하여 task세분화 -> jinja2 template으로 config파일 템플릿화
+4. telegraf배포시 ansible Dynamic Inventory사용
+5. Terraform Grafana Provider 사용해서 구성해보기
