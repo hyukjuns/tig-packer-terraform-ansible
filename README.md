@@ -3,11 +3,20 @@
 ***terraform apply 한번으로 TIG Monitoring Service 배포 및 구성까지***
 <p>Terraform으로 Monitor Server를 생성힘과 동시에 Ansible playbook을 Trigger하여 Monitoring Service를 구성하고 Agent를 배포합니다.</p>
 
-***전제조건***
+***시나리오***
 ```
 운영중인 Production 환경에 Monitoring서비스를 구축하는 시나리오로 가정,
-따라서 Target Server들과 Vnet,Subnet은 이미 존재하며 그 안에 monitor server를 생성하는 시나리오
+따라서 Target Server들과 Vnet,Subnet은 이미 존재하며 그 안에 monitor server를 생성
 ```
+- 사전 구성 필요
+    - infra: vnet, subnet, nsg
+    - ansbile/telegraf 디렉토리
+        - inventory.ini -> 타겟 서버 ip 및 ansible user 정의
+        - telegraf.conf -> db server url, db name, db user, db user password
+    - ansbile user의 sudo권한 필요
+        - become_method는 sudo이므로 ansible user는 sudo 명령을 사용할 수 있어야 함
+        - andible.cfg -> become method 정의
+        - inventory.ini -> ansbile_user 정의
 ### Diagram
 ![archi](./images/tig.svg)
 

@@ -33,6 +33,7 @@ resource "azurerm_public_ip" "monitoring_server_pip" {
   resource_group_name = data.azurerm_resource_group.monitoring_rg.name
   location            = data.azurerm_resource_group.monitoring_rg.location
   allocation_method   = "Static"
+  sku = "Standard"
 }
 
 resource "azurerm_network_interface" "monitoring_server_nic" {
