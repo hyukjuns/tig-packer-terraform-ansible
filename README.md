@@ -17,6 +17,8 @@
         - become_method는 sudo이므로 ansible user는 sudo 명령을 사용할 수 있어야 함
         - andible.cfg -> become method 정의
         - inventory.ini -> ansbile_user 정의
+    - grafana_influxdb_ansible.yml
+        - influxdb의 database, 사용자 및 비밀번호 셋팅 필요
 ### Diagram
 ![archi](./images/tig.svg)
 

@@ -32,11 +32,11 @@
             state: started
             enabled: yes
         - name:
-          shell: curl "http://localhost:8086/query" --data-urlencode "q=CREATE DATABASE "telegrafdb""
+          shell: curl "http://localhost:8086/query" --data-urlencode "q=CREATE DATABASE "<DBNAME>""
         - name:
-          shell: curl "http://localhost:8086/query" --data-urlencode "q=CREATE USER mspadmin WITH PASSWORD 'dkagh1.dkagh1.' WITH ALL PRIVILEGES"
+          shell: curl "http://localhost:8086/query" --data-urlencode "q=CREATE USER <USERNAME> WITH PASSWORD '<PASSWORD>' WITH ALL PRIVILEGES"
         - name:
-          shell: curl "http://localhost:8086/query" --data-urlencode "q=GRANT ALL PRIVILEGES TO "mspadmin""
+          shell: curl "http://localhost:8086/query" --data-urlencode "q=GRANT ALL PRIVILEGES TO "<USERNAME>""
         - name: Set auth-enabled
           shell: sed -i "s/# auth-enabled = false/auth-enabled = true/g" /etc/influxdb/influxdb.conf
         - name: Update apt-get
