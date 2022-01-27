@@ -1,0 +1,24 @@
+# ubuntu, centos
+[linux]
+
+
+[windows]
+
+
+[linux:vars]
+ansible_user="az"
+ansible_password=""
+become = True
+become_method = sudo
+become_user = root
+become_ask_pass = false
+
+[windows:vars]
+ansible_connection=winrm
+ansible_port=5985
+ansible_user="az"
+ansible_password=""
+ansible_winrm_server_cert_validation=ignore
+ansible_winrm_scheme=http
+; <ubuntuip> ansible_user="" ansible_password=
+; <centosip> ansible_user="" ansible_password=""  ansible_become_password=

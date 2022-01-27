@@ -1,0 +1,49 @@
+---
+- name: Install Telegraf Linux distro and windows
+  hosts: target
+  become: yes
+  tasks:
+    - block:
+        - name: Install Telegraf Agent - Ubuntu
+          apt:
+            deb: https://dl.influxdata.com/telegraf/releases/telegraf_1.18.1-1_amd64.deb
+        - name: Copy telegraf config - Ubuntu
+          copy:
+            src: ./config/telegraf.conf
+            dest: /etc/telegraf/telegraf.conf
+          notify:
+          - Restart Telegraf
+        - name: Start Telegraf - Ubuntu
+          service:
+            name: telegraf
+            state: started
+            enabled: yes
+      when: ansible_distribution == "Ubuntu"
+    - block:
+        - name: Install Telegraf Agent - Windows
+          apt:
+            deb: https://dl.influxdata.com/telegraf/releases/telegraf_1.18.1-1_amd64.deb
+        - name: Copy telegraf config - Ubuntu
+          copy:
+            src: ./config/telegraf.conf
+            dest: /etc/telegraf/telegraf.conf
+          notify:
+          - Restart Telegraf
+        - name: Start Telegraf - Ubuntu
+          service:
+            name: telegraf
+            state: started
+            enabled: yes
+      when: ansible_distribution == "Windows"
+  handlers:
+        - name: Restart Telegraf
+          ansible.builtin.service:
+            name: telegraf
+            state: restarted
+- name: Print info
+  hosts: target
+  become: true
+  tasks:
+    - name: Show ansible_facts:\ Target VMs Private ip
+      debug:
+        var: ansible_facts.default_ipv4.address
