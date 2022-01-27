@@ -20,20 +20,6 @@
             enabled: yes
       when: ansible_distribution == "Ubuntu"
     - block:
-        - name: Install Telegraf Agent - Windows
-          apt:
-            deb: https://dl.influxdata.com/telegraf/releases/telegraf_1.18.1-1_amd64.deb
-        - name: Copy telegraf config - Ubuntu
-          copy:
-            src: ./config/telegraf.conf
-            dest: /etc/telegraf/telegraf.conf
-          notify:
-          - Restart Telegraf
-        - name: Start Telegraf - Ubuntu
-          service:
-            name: telegraf
-            state: started
-            enabled: yes
       when: ansible_distribution == "Windows"
   handlers:
         - name: Restart Telegraf
