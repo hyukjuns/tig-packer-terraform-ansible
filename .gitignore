@@ -1,3 +1,4 @@
+# terraform
 **/.terraform
 **/*.tfstate
 **/*.backup
@@ -6,4 +7,6 @@
 *.tfvars
 terraform.tfvars
 terraform.tfstate.backup
+
+# ansible
 *.ini

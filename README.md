@@ -1,3 +1,10 @@
+### 남은 미션
+1. Ansible User 권한 구체화
+2. Windows 추가
+3. ansible-galaxy로 role 생성
+4. Azure의 Dynamic Inventory사용 
+5. Terraform Grafana Provider
+
 # TIG Monitoring Provision & Configuration
 ### 소개
 ***terraform apply 한번으로 TIG Monitoring Service 배포 및 구성까지***
@@ -49,9 +56,3 @@
 3. Dashboard
 ![dashboard](./images/dashboard.png)
 ![dashboard2](./images/dashboard2.png)
-### To-Be
-1. 기존 운영 중인 서버들에 Ansible User의 root권한 확보방식 구체화
-2. 타겟 OS 추가(Windows, Debian, SUSE)
-3. ansible-galaxy로 role생성하여 task세분화 -> jinja2 template으로 config파일 템플릿화
-4. telegraf배포시 ansible Dynamic Inventory사용
-5. Terraform Grafana Provider 사용해서 구성해보기
