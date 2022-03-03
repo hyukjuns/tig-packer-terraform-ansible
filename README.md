@@ -1,39 +1,34 @@
-### 남은 미션
-1. Ansible User 권한 구체화
-2. Windows 추가
-3. ansible-galaxy로 role 생성
-4. Azure의 Dynamic Inventory사용 
-5. Terraform Grafana Provider
-
 # TIG Monitoring Provision & Configuration
-### 소개
-***terraform apply 한번으로 TIG Monitoring Service 배포 및 구성까지***
-<p>Terraform으로 Monitor Server를 생성힘과 동시에 Ansible playbook을 Trigger하여 Monitoring Service를 구성하고 Agent를 배포합니다.</p>
+### 개요
+**Terraform & Ansible을 활용한 TIG Monitoring Service 배포 및 구성**
+<p>Terraform으로 Monitoring VM을 생성힘과 동시에 Ansible playbook을 Trigger하여 Monitoring Service를 구성하고, 모니터링 대상 VM에 Agent를 배포합니다.</p>
 
-***시나리오***
+### 데모 시나리오
 ```
-운영중인 Production 환경에 Monitoring서비스를 구축하는 시나리오로 가정,
-따라서 Target Server들과 Vnet,Subnet은 이미 존재하며 그 안에 monitor server를 생성
+기동중인 Production 환경에 Monitoring 서비스를 구축,
+Target VM들과 Vnet,Subnet은 이미 존재하며 그 안에 TIG Monitoring 서비스를 구축
 ```
-- 사전 구성 필요
-    - infra: vnet, subnet, nsg
-    - ansbile/telegraf 디렉토리
-        - inventory.ini -> 타겟 서버 ip 및 ansible user 정의
-        - telegraf.conf -> db server url, db name, db user, db user password
-    - ansbile user의 sudo권한 필요
-        - become_method는 sudo이므로 ansible user는 sudo 명령을 사용할 수 있어야 함
-        - andible.cfg -> become method 정의
-        - inventory.ini -> ansbile_user 정의
-    - grafana_influxdb_ansible.yml
-        - influxdb의 database, 사용자 및 비밀번호 셋팅 필요
+
 ### Diagram
 ![archi](./images/tig.svg)
 
-### Skill Stack
-- ***Terraform 0.14.10***
-- ***Ansible 2.10.7***
-- ***Bash Shell Script***
-### Working Flow
+### 사전 구성
+    - 데모 인프라 세팅: VNET, SUBNET, NSG, Target VM
+    - ansbile/telegraf
+        - inventory.ini : 타겟 VM ip 및 ansible user 정의
+        - telegraf.conf : influxdb정보 세팅(db server url, db name, db user, db user password)
+    - ansbile user의 sudo권한 준비
+        - andible.cfg : become method 정의(become_method을 통해 ansible user는 sudo 명령을 사용)
+        - inventory.ini : ansbile_user 정의
+    - grafana_influxdb_ansible.yml
+        - influxdb의 DATABASE, USER, PASSWORD 세팅
+
+### Used Skill
+- **Terraform 0.14.10**
+- **Ansible 2.10.7**
+- **Bash Shell Script**
+
+### Work Flow
 **Step 1. Provision & Configure Monitor server**
 1. Enter ***terraform apply***
     - Provisioning Monitor Server(Ubuntu 18.04) (생성 후 자동으로 ansible 실행)
@@ -56,3 +51,10 @@
 3. Dashboard
 ![dashboard](./images/dashboard.png)
 ![dashboard2](./images/dashboard2.png)
+
+### 남은 미션
+1. Ansible User 권한 구체화
+2. Windows 추가
+3. ansible-galaxy로 role 생성
+4. Azure의 Dynamic Inventory사용 
+5. Terraform Grafana Provider
