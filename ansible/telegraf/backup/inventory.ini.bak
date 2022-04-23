@@ -1,0 +1,4 @@
+# ubuntu, centos
+[target]
+<ubuntuip> ansible_user="" ansible_password=
+<centosip> ansible_user="" ansible_password=""  ansible_become_password=

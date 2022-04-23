@@ -4,8 +4,12 @@
 ls ./inventory.ini
 LS_STATUS=$?
 
+if [LS_STATUS -ne 0 ];then
+    return;
+fi
+
 # 대기
-sleep 10
+sleep 5
 
 # ansbile ping 시도 5회
 count=0
@@ -13,7 +17,7 @@ while [ $count -le 5 ];do
 ansible -m ping monitor -i ./inventory.ini
 PING_STATUS=$?
 if [ $PING_STATUS -eq 0 ];then
-    break
+    break;
 fi
 count=$((count + 1))
 sleep 5
@@ -23,5 +27,5 @@ done
 if [ $LS_STATUS -eq 0 -a $PING_STATUS -eq 0 ];then
     ansible-playbook ./grafana_influxdb_ansible.yml
 else 
-    echo "ansible ping failed"
+    echo "ansible ping failed";
 fi

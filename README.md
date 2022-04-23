@@ -1,4 +1,5 @@
 # TIG Monitoring Provision & Configuration
+Installing TIG Stack by Terraform and Ansible and some shell scripts
 ### 개요
 **Terraform & Ansible을 활용한 TIG Monitoring Service 배포 및 구성**
 <p>Terraform으로 Monitoring VM을 생성힘과 동시에 Ansible playbook을 Trigger하여 Monitoring Service를 구성하고, 모니터링 대상 VM에 Agent를 배포합니다.</p>

@@ -1,0 +1,5 @@
+perl -i -pe 's/test/great/g' a.txt
+perl -i -pe 's/MONITOR_SERVER_PIP/ipaddress/g' telegraf.conf
+perl -i -pe 's/DB_NAME/dbname/g' telegraf.conf
+perl -i -pe 's/DB_ADMIN_NAME/username/g' telegraf.conf
+perl -i -pe 's/DB_ADMIN_PASSWORD/password/g' telegraf.conf
