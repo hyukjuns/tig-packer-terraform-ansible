@@ -73,7 +73,7 @@ resource "azurerm_linux_virtual_machine" "monitor" {
     version   = "latest"
   }
 }
-# Telegraf Cofig 수정
+# Edit Telegraf Cofig (InfluxDB URL, Database, ADMIN Info)
 resource "null_resource" "telegraf_config" {
   depends_on = [azurerm_linux_virtual_machine.monitor]
 
@@ -87,7 +87,7 @@ perl -i -pe 's/DB_ADMIN_PASSWORD/${var.db_admin_password}/g' telegraf.conf
 EOH
   }
 }
-
+# Make ansible inventory for monitor server (Monitor server info, InfluxDB info)
 resource "null_resource" "make_inventory" {
   depends_on = [azurerm_linux_virtual_machine.monitor]
 
@@ -109,6 +109,7 @@ EOH
   }
 }
 
+# Trigger Ansible in Project path
 resource "null_resource" "trigger_ansible" {
   depends_on = [null_resource.make_inventory]
   
