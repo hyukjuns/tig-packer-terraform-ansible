@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
-      version = "3.3.0"
+      version = " ~> 3.0"
     }
   }
 }
@@ -16,7 +16,6 @@ resource "azurerm_resource_group" "target" {
   location = var.location
 }
 
-
 resource "azurerm_virtual_network" "target" {
   name                = "target-vnet"
   location            = azurerm_resource_group.target.location
@@ -24,12 +23,19 @@ resource "azurerm_virtual_network" "target" {
   address_space       = ["10.0.0.0/16"]
 }
 
-resource "azurerm_subnet" "target" {
+resource "azurerm_subnet" "target_01" {
   name                 = "target-subnet"
   resource_group_name  = azurerm_resource_group.target.name
   virtual_network_name = azurerm_virtual_network.target.name
   address_prefixes     = ["10.0.1.0/24"]
-  }
+}
+
+resource "azurerm_subnet" "target_02" {
+  name                 = "mgmt-subnet"
+  resource_group_name  = azurerm_resource_group.target.name
+  virtual_network_name = azurerm_virtual_network.target.name
+  address_prefixes     = ["10.0.100.0/24"]
+}
 
 # Ubuntu
 resource "azurerm_public_ip" "target_ubuntu" {
@@ -46,7 +52,7 @@ resource "azurerm_network_interface" "target_ubuntu" {
 
   ip_configuration {
     name                          = "target-ubuntu-nic-config"
-    subnet_id                     = azurerm_subnet.target.id
+    subnet_id                     = azurerm_subnet.target_01.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id = azurerm_public_ip.target_ubuntu.id
   }
@@ -94,7 +100,7 @@ resource "azurerm_network_interface" "target_centos" {
 
   ip_configuration {
     name                          = "target-centos-nic-config"
-    subnet_id                     = azurerm_subnet.target.id
+    subnet_id                     = azurerm_subnet.target_01.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id = azurerm_public_ip.target_centos.id
   }

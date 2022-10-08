@@ -21,6 +21,9 @@
 ## Usage
 1. Setup terraform.tfvars
     ```
+    network_vnet_name = "target-vnet"
+    network_subnet_name = "mgmt-subnet"
+    network_resource_group_name = "tig-demo-rg"
     location = "koreacentral"
     admin_username = "username"
     admin_password = "password"

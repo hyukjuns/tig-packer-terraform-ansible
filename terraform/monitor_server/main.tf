@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
-      version = "3.3.0"
+      version = " ~> 3.0"
     }
   }
 }
@@ -11,33 +11,29 @@ provider "azurerm" {
   features {}
 }
 
-data "azurerm_resource_group" "monitor" {
-  name     = "tig-demo-rg"
-}
-
-data "azurerm_virtual_network" "monitor" {
-  name                = "target-vnet"
-  resource_group_name = data.azurerm_resource_group.monitor.name
-}
-
 data "azurerm_subnet" "monitor" {
-  name                 = "target-subnet"
-  virtual_network_name = data.azurerm_virtual_network.monitor.name
-  resource_group_name  = data.azurerm_resource_group.monitor.name
+  name                 = var.network_subnet_name
+  virtual_network_name = var.network_vnet_name
+  resource_group_name  = var.network_resource_group_name
+}
+
+resource "azurerm_resource_group" "monitor" {
+  name     = var.monitor_resource_group_name
+  location = var.monitor_resource_group_location
 }
 
 # Monitoring Server (Ubuntu)
 resource "azurerm_public_ip" "monitor" {
   name                = "monitor-pip"
-  resource_group_name = data.azurerm_resource_group.monitor.name
-  location            = data.azurerm_resource_group.monitor.location
+  resource_group_name = azurerm_resource_group.monitor.name
+  location            = azurerm_resource_group.monitor.location
   allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "monitor" {
   name                = "monitor-nic"
-  location            = data.azurerm_resource_group.monitor.location
-  resource_group_name = data.azurerm_resource_group.monitor.name
+  resource_group_name = azurerm_resource_group.monitor.name
+  location            = azurerm_resource_group.monitor.location
 
   ip_configuration {
     name                          = "monitor-nic-config"
@@ -49,8 +45,8 @@ resource "azurerm_network_interface" "monitor" {
 
 resource "azurerm_linux_virtual_machine" "monitor" {
   name                = "monitor-server"
-  resource_group_name = data.azurerm_resource_group.monitor.name
-  location            = data.azurerm_resource_group.monitor.location
+  resource_group_name = azurerm_resource_group.monitor.name
+  location            = azurerm_resource_group.monitor.location
   size                = "Standard_F2"
   
   network_interface_ids = [
@@ -80,7 +76,7 @@ resource "null_resource" "telegraf_config" {
   provisioner "local-exec" {
     working_dir = "../../ansible/telegraf/config"
     command = <<EOH
-perl -i -pe 's/MONITOR_SERVER_PIP/${azurerm_linux_virtual_machine.monitor.public_ip_address}/g' telegraf.conf
+perl -i -pe 's/MONITOR_SERVER_IP/${azurerm_linux_virtual_machine.monitor.private_ip_address}/g' telegraf.conf
 perl -i -pe 's/DB_NAME/${var.influxdb_db_name}/g' telegraf.conf
 perl -i -pe 's/DB_ADMIN_NAME/${var.db_admin_username}/g' telegraf.conf
 perl -i -pe 's/DB_ADMIN_PASSWORD/${var.db_admin_password}/g' telegraf.conf
