@@ -12,6 +12,7 @@
     ```
 2. ```variables.pkrvars.hcl``` 작성
     - variables.pkr.hcl에 선언된 변수들 중 ```default```값이 정의되지 않은 변수들을 정의합니다.
+    - ```variables.pkrvars.hcl.example``` 참고
 3. 이미지 생성
     ```
     packer validate -var-file=variables.pkrvars.hcl .
