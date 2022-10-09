@@ -1,0 +1,11 @@
+client_id       = ""
+client_secret   = ""
+subscription_id = ""
+tenant_id       = ""
+
+influxdb_user_name     = ""
+influxdb_user_password = ""
+
+managed_image_resource_group_name = ""
+managed_image_name                = ""
+image_version                     = ""

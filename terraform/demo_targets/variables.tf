@@ -1,7 +1,12 @@
+variable "resource_group_name" {
+  type        = string
+  description = "demo targets resource group name"
+  default     = "tig-demo-targets-rg"
+}
 variable "location" {
-  type = string
+  type        = string
   description = "location"
-  default = "koreacentral"
+  default     = "koreacentral"
 }
 variable "admin_username" {
   type        = string

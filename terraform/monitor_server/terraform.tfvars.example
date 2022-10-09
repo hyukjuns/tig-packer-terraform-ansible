@@ -1,0 +1,10 @@
+network_resource_group_name = ""
+network_vnet_name           = ""
+network_subnet_name         = ""
+
+source_image_id                 = ""
+monitor_resource_group_name     = ""
+monitor_resource_group_location = ""
+
+admin_username = ""
+admin_password = ""

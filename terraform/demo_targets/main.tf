@@ -1,18 +1,18 @@
 terraform {
   required_providers {
     azurerm = {
-      source = "hashicorp/azurerm"
+      source  = "hashicorp/azurerm"
       version = " ~> 3.0"
     }
   }
 }
 
 provider "azurerm" {
-  features{}  
+  features {}
 }
 
 resource "azurerm_resource_group" "target" {
-  name     = "tig-demo-rg"
+  name     = var.resource_group_name
   location = var.location
 }
 
@@ -30,7 +30,7 @@ resource "azurerm_subnet" "target_01" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
-resource "azurerm_subnet" "target_02" {
+resource "azurerm_subnet" "monitor" {
   name                 = "mgmt-subnet"
   resource_group_name  = azurerm_resource_group.target.name
   virtual_network_name = azurerm_virtual_network.target.name
@@ -54,7 +54,7 @@ resource "azurerm_network_interface" "target_ubuntu" {
     name                          = "target-ubuntu-nic-config"
     subnet_id                     = azurerm_subnet.target_01.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = azurerm_public_ip.target_ubuntu.id
+    public_ip_address_id          = azurerm_public_ip.target_ubuntu.id
   }
 }
 
@@ -63,13 +63,13 @@ resource "azurerm_linux_virtual_machine" "target_ubuntu" {
   resource_group_name = azurerm_resource_group.target.name
   location            = azurerm_resource_group.target.location
   size                = "Standard_F2"
-  
+
   network_interface_ids = [
     azurerm_network_interface.target_ubuntu.id,
   ]
 
-  admin_username = var.admin_username
-  admin_password = var.admin_password
+  admin_username                  = var.admin_username
+  admin_password                  = var.admin_password
   disable_password_authentication = false
 
   os_disk {
@@ -102,7 +102,7 @@ resource "azurerm_network_interface" "target_centos" {
     name                          = "target-centos-nic-config"
     subnet_id                     = azurerm_subnet.target_01.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = azurerm_public_ip.target_centos.id
+    public_ip_address_id          = azurerm_public_ip.target_centos.id
   }
 }
 
@@ -111,13 +111,13 @@ resource "azurerm_linux_virtual_machine" "target_centos" {
   resource_group_name = azurerm_resource_group.target.name
   location            = azurerm_resource_group.target.location
   size                = "Standard_F2"
-  
+
   network_interface_ids = [
     azurerm_network_interface.target_centos.id,
   ]
 
-  admin_username = var.admin_username
-  admin_password = var.admin_password
+  admin_username                  = var.admin_username
+  admin_password                  = var.admin_password
   disable_password_authentication = false
 
   os_disk {
