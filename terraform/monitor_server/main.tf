@@ -13,9 +13,9 @@ provider "azurerm" {
 
 # 모니터링 서버가 사용할 네트워크 환경
 data "azurerm_subnet" "monitor" {
-  name                 = var.network_subnet_name
-  virtual_network_name = var.network_vnet_name
   resource_group_name  = var.network_resource_group_name
+  virtual_network_name = var.network_vnet_name
+  name                 = var.network_subnet_name
 }
 
 # 모니터링 서버가 생성될 리소스 그룹
@@ -26,19 +26,19 @@ resource "azurerm_resource_group" "monitor" {
 
 # Monitoring Server Spec (Ubuntu)
 resource "azurerm_public_ip" "monitor" {
-  name                = "monitor-pip"
+  name                = "${var.monitor_server_name}-pip"
   resource_group_name = azurerm_resource_group.monitor.name
   location            = azurerm_resource_group.monitor.location
   allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "monitor" {
-  name                = "monitor-nic"
+  name                = "${var.monitor_server_name}-nic"
   resource_group_name = azurerm_resource_group.monitor.name
   location            = azurerm_resource_group.monitor.location
 
   ip_configuration {
-    name                          = "monitor-nic-config"
+    name                          = "monitor-nic-ipconfig"
     subnet_id                     = data.azurerm_subnet.monitor.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.monitor.id
@@ -46,7 +46,7 @@ resource "azurerm_network_interface" "monitor" {
 }
 
 resource "azurerm_linux_virtual_machine" "monitor" {
-  name                = "monitor-server"
+  name                = var.monitor_server_name
   resource_group_name = azurerm_resource_group.monitor.name
   location            = azurerm_resource_group.monitor.location
   size                = "Standard_F2"
@@ -68,7 +68,7 @@ resource "azurerm_linux_virtual_machine" "monitor" {
 
 # NSG
 resource "azurerm_network_security_group" "monitor" {
-  name                = "monitor-server-nsg"
+  name                = "${var.monitor_server_name}-nsg"
   location            = azurerm_resource_group.monitor.location
   resource_group_name = azurerm_resource_group.monitor.name
 

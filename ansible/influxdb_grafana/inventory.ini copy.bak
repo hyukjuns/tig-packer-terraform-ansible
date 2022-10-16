@@ -1,6 +1,0 @@
-[monitor]
-<MONITOR SERVER PIP>
-
-[monitor:vars]
-ansible_user=""
-ansible_password=""

@@ -3,6 +3,7 @@ client_secret   = ""
 subscription_id = ""
 tenant_id       = ""
 
+influxdb_db_name = ""
 influxdb_user_name     = ""
 influxdb_user_password = ""
 

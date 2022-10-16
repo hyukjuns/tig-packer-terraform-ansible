@@ -71,25 +71,25 @@ build {
     ]
   }
 
+  # Make Ansbile workspace
   provisioner "file" {
-    source      = "./configs/telegraf.conf"
-    destination = "/tmp/telegraf.conf"
+    source      = "../ansible"
+    destination = "/tmp"
   }
-
   provisioner "shell" {
     execute_command = "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'"
     inline_shebang  = "/bin/sh -x"
     inline = [
-      "perl -i -pe 's/DB_NAME/${var.influxdb_db_name}/g' /tmp/telegraf.conf",
-      "perl -i -pe 's/DB_ADMIN_NAME/${var.influxdb_user_name}/g' /tmp/telegraf.conf",
-      "perl -i -pe 's/DB_ADMIN_PASSWORD/${var.influxdb_user_password}/g' /tmp/telegraf.conf"
+      "perl -i -pe 's/DB_NAME/${var.influxdb_db_name}/g' /tmp/ansible/config/telegraf.conf",
+      "perl -i -pe 's/DB_ADMIN_NAME/${var.influxdb_user_name}/g' /tmp/ansible/config/telegraf.conf",
+      "perl -i -pe 's/DB_ADMIN_PASSWORD/${var.influxdb_user_password}/g' /tmp/ansible/config/telegraf.conf"
     ]
   }
   provisioner "shell" {
     execute_command = "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'"
     inline_shebang  = "/bin/sh -x"
     inline = [
-      "sudo mv /tmp/telegraf.conf /etc/influxdb/"
+      "sudo mv /tmp/ansible /opt"
     ]
   }
 

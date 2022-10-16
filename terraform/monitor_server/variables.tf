@@ -27,6 +27,11 @@ variable "monitor_resource_group_location" {
   description = "location"
   default     = "koreacentral"
 }
+variable "monitor_server_name" {
+  type = string
+  description = "monitor server name"
+  default = "monitor-server"
+}
 
 # 서버 접속 계정
 variable "admin_username" {

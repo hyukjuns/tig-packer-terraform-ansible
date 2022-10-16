@@ -12,8 +12,8 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "target" {
-  name     = var.resource_group_name
-  location = var.location
+  name     = "tig-demo-targets-rg"
+  location = "koreacentral"
 }
 
 resource "azurerm_virtual_network" "target" {
@@ -62,7 +62,7 @@ resource "azurerm_linux_virtual_machine" "target_ubuntu" {
   name                = "target-ubuntu"
   resource_group_name = azurerm_resource_group.target.name
   location            = azurerm_resource_group.target.location
-  size                = "Standard_B2"
+  size                = "Standard_B2s"
 
   network_interface_ids = [
     azurerm_network_interface.target_ubuntu.id,
@@ -110,7 +110,7 @@ resource "azurerm_linux_virtual_machine" "target_centos" {
   name                = "target-centos"
   resource_group_name = azurerm_resource_group.target.name
   location            = azurerm_resource_group.target.location
-  size                = "Standard_B2"
+  size                = "Standard_B2s"
 
   network_interface_ids = [
     azurerm_network_interface.target_centos.id,
