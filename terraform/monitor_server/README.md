@@ -10,7 +10,9 @@
 
 ### Grafana Setup
 - Data Source
+
     ![datasource_01](../../_img/data_source_01.png)
+    
     ![datasource_01](../../_img/data_source_02.png)
 - Dashboard
     - import 61
