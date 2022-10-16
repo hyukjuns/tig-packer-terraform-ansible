@@ -23,7 +23,7 @@ resource "azurerm_virtual_network" "target" {
   address_space       = ["10.0.0.0/16"]
 }
 
-resource "azurerm_subnet" "target_01" {
+resource "azurerm_subnet" "target" {
   name                 = "target-subnet"
   resource_group_name  = azurerm_resource_group.target.name
   virtual_network_name = azurerm_virtual_network.target.name
@@ -52,7 +52,7 @@ resource "azurerm_network_interface" "target_ubuntu" {
 
   ip_configuration {
     name                          = "target-ubuntu-nic-config"
-    subnet_id                     = azurerm_subnet.target_01.id
+    subnet_id                     = azurerm_subnet.target.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.target_ubuntu.id
   }
@@ -62,7 +62,7 @@ resource "azurerm_linux_virtual_machine" "target_ubuntu" {
   name                = "target-ubuntu"
   resource_group_name = azurerm_resource_group.target.name
   location            = azurerm_resource_group.target.location
-  size                = "Standard_F2"
+  size                = "Standard_B2"
 
   network_interface_ids = [
     azurerm_network_interface.target_ubuntu.id,
@@ -100,7 +100,7 @@ resource "azurerm_network_interface" "target_centos" {
 
   ip_configuration {
     name                          = "target-centos-nic-config"
-    subnet_id                     = azurerm_subnet.target_01.id
+    subnet_id                     = azurerm_subnet.target.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.target_centos.id
   }
@@ -110,7 +110,7 @@ resource "azurerm_linux_virtual_machine" "target_centos" {
   name                = "target-centos"
   resource_group_name = azurerm_resource_group.target.name
   location            = azurerm_resource_group.target.location
-  size                = "Standard_F2"
+  size                = "Standard_B2"
 
   network_interface_ids = [
     azurerm_network_interface.target_centos.id,
