@@ -1,13 +1,15 @@
 # Install TIG Stack by Packer, Terraform, Ansible
 Packer를 사용해 InfluxDB, Grafana, Ansible이 설치된 Monitoring 서버 이미지를 만든 후 Terraform을 사용해 가상머신을 Provisioning 한 뒤, Ansible을 사용해 모니터링 대상 VM에 Telegraf 에이전트를 Deploy 합니다.
 
+![tig_diagram](./_img/tig_diagram.png)
+
 ## Workflows
 1. **Build** monitoring server image by Packer
 2. **Provisioning** monitoring server vm by Terraform
 3. **Deploy** telegraf agent by Ansible
 
-## Prerequistes
-1. Azure Credentials,
+## Prerequsites
+1. Azure Credentials
 2. Packer >= 1.8.3
 3. Terraform >= 1.3.1
 
