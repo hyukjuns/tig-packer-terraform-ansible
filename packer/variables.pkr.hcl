@@ -58,7 +58,7 @@ variable "location" {
 }
 variable "offer" {
   type    = string
-  default = "UbuntuServer"
+  default = "0001-com-ubuntu-server-focal"
 }
 variable "publisher" {
   type    = string
@@ -66,7 +66,7 @@ variable "publisher" {
 }
 variable "sku" {
   type    = string
-  default = "18.04-LTS"
+  default = "20_04-lts-gen2"
 }
 variable "os_type" {
   type    = string
