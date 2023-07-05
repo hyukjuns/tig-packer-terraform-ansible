@@ -1,10 +1,9 @@
-network_resource_group_name = ""
-network_vnet_name           = ""
-network_subnet_name         = ""
+# Monitor Server info
+resource_group_name = ""
+location            = ""
+monitor_server_name = ""
+source_image_id     = ""
 
-source_image_id                 = ""
-monitor_resource_group_name     = ""
-monitor_resource_group_location = ""
-
+# Server admin info
 admin_username = ""
 admin_password = ""

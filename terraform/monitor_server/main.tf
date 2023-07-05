@@ -11,17 +11,25 @@ provider "azurerm" {
   features {}
 }
 
-# 모니터링 서버가 사용할 네트워크 환경
-data "azurerm_subnet" "monitor" {
-  resource_group_name  = var.network_resource_group_name
-  virtual_network_name = var.network_vnet_name
-  name                 = var.network_subnet_name
+# Resource Group
+resource "azurerm_resource_group" "monitor" {
+  name     = var.resource_group_name
+  location = var.location
 }
 
-# 모니터링 서버가 생성될 리소스 그룹
-resource "azurerm_resource_group" "monitor" {
-  name     = var.monitor_resource_group_name
-  location = var.monitor_resource_group_location
+# vnet
+resource "azurerm_virtual_network" "monitor" {
+  name                = "monitor-vnet-001"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.monitor.location
+  resource_group_name = azurerm_resource_group.monitor.name
+}
+
+resource "azurerm_subnet" "monitor" {
+  name                 = "monitor-subnet"
+  resource_group_name  = azurerm_resource_group.monitor.name
+  virtual_network_name = azurerm_virtual_network.monitor.name
+  address_prefixes     = ["10.0.1.0/24"]
 }
 
 # Monitoring Server Spec (Ubuntu)
@@ -39,7 +47,7 @@ resource "azurerm_network_interface" "monitor" {
 
   ip_configuration {
     name                          = "monitor-nic-ipconfig"
-    subnet_id                     = data.azurerm_subnet.monitor.id
+    subnet_id                     = azurerm_subnet.monitor.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.monitor.id
   }
@@ -49,7 +57,7 @@ resource "azurerm_linux_virtual_machine" "monitor" {
   name                = var.monitor_server_name
   resource_group_name = azurerm_resource_group.monitor.name
   location            = azurerm_resource_group.monitor.location
-  size                = "Standard_F2"
+  size                = "Standard_DS2_v2"
 
   network_interface_ids = [
     azurerm_network_interface.monitor.id,

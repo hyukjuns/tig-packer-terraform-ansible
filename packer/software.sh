@@ -1,14 +1,22 @@
 #!/bin/bash
 
-DATABASE=""
-DB_USERNAME=""
-$DB_PASSWORD=""
-#-----------------------------------
-# Influxdb v1.8.10
-# Ubuntu/Debian AMD64
-echo 
-echo "=====Install InfluxDB====="
+# Input Variable from packer variable
+DATABASE=$1
+DB_USERNAME=$2
+DB_PASSWORD=$3
+
+echo "Scripti Start at $(date '+%Y-%m-%d %H:%M:%S')"
 echo
+echo "Check input variables"
+echo "DATABASE=$DATABASE, DB_USERNAME=$DB_USERNAME, DB_PASSWORD=$DB_PASSWORD"
+echo
+
+# Install Influxdb v1.8.10
+# Distro - Ubuntu/Debian AMD64
+echo 
+echo "===== Install InfluxDB v1.8.10 ====="
+echo
+
 wget https://dl.influxdata.com/influxdb/releases/influxdb_1.8.10_amd64.deb
 dpkg -i influxdb_1.8.10_amd64.deb
 systemctl enable --now influxdb
@@ -18,33 +26,31 @@ curl "http://localhost:8086/query" --data-urlencode "q=GRANT ALL PRIVILEGES TO "
 sed -i "s/# auth-enabled = false/auth-enabled = true/g" /etc/influxdb/influxdb.conf
 systemctl restart influxdb
 
+echo
+echo "===== End Influxdb Installation ====="
+echo
 
-#-----------------------------------
-# telegraf v1.27.1
+# Telegraf v1.27.1
 # Ubuntu/Debian
 echo 
-echo "=====Install Telegraf====="
+echo "===== Install Telegraf v1.27.1 ====="
 echo
+
 wget -q https://repos.influxdata.com/influxdata-archive_compat.key
 echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
 echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
 sudo apt-get update && sudo apt-get install telegraf
 
-# # RHEL/CentOS
-# echo 
-# echo "=====Install Telegraf====="
-# echo
-# cat <<EOF | sudo tee /etc/yum.repos.d/influxdata.repo
-# [influxdata]
-# name = InfluxData Repository - Stable
-# baseurl = https://repos.influxdata.com/stable/\$basearch/main
-# enabled = 1
-# gpgcheck = 1
-# gpgkey = https://repos.influxdata.com/influxdata-archive_compat.key
-# EOF
-# sudo yum install -y telegraf
+echo 
+echo "===== End Telegraf Installation ====="
+echo
 
-# Setup
+# Setup telegraf config
+
+echo 
+echo "===== Setup Telegraf Configuration ====="
+echo
+
 telegraf config > telegraf-custom.conf --output-filter=influxdb
 # IP Check tool
 apt install -y net-tools
@@ -59,11 +65,16 @@ sed -i "s/\# password = \"metricsmetricsmetricsmetrics\"/password = \"$DB_PASSWO
 cp telegraf-custom.conf /etc/telegraf/telegraf.d/
 systemctl enable --now telegraf
 
-#-----------------------------------
-# grafana
 echo 
-echo "=====Install Grafana====="
+echo "===== End Telegraf Setting ====="
 echo
+
+# Install Grafana stable latest
+
+echo 
+echo "===== Install Grafana stable latest ====="
+echo
+
 apt-get install -y apt-transport-https
 apt-get install -y software-properties-common wget
 wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
@@ -72,9 +83,23 @@ apt-get update -y
 apt-get install -y grafana
 systemctl enable --now grafana-server
 
-#-----------------------------------
-# ansible
-# "sudo apt update -y",
-# "sudo apt install -y software-properties-common",
-# "sudo add-apt-repository --yes --update ppa:ansible/ansible",
-# "sudo apt install -y ansible"
+echo 
+echo "===== End Grafana Installation ====="
+echo
+
+
+# Install Ansible stable latest
+echo 
+echo "===== Install Ansible stable latest ====="
+echo
+
+apt update -y
+apt install -y software-properties-common
+add-apt-repository --yes --update ppa:ansible/ansible
+apt install -y ansible
+
+echo 
+echo "===== End Ansible Installation ====="
+echo
+
+echo "Scripti End at $(date '+%Y-%m-%d %H:%M:%S')"

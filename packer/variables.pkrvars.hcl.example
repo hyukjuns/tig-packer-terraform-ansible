@@ -1,15 +1,14 @@
-# 앱정보
+# App info
 client_id       = ""
 client_secret   = ""
 subscription_id = ""
 tenant_id       = ""
 
-# DB 정보
-influxdb_db_name = ""
-influxdb_user_name     = ""
-influxdb_user_password = ""
-
-# 이미지 정보
+# Managed Image info
 managed_image_resource_group_name = ""
 managed_image_name                = ""
-image_version                     = ""
+
+# Inflxudb info
+influxdb_name = ""
+influxdb_username = ""
+influxdb_password = ""

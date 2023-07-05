@@ -1,26 +1,28 @@
-# App info - Required
+# === Required ===
+# App info
 variable "client_id" {
   type      = string
-  description = "app id"
+  description = "Applicaion ID"
   sensitive = true
 }
 variable "client_secret" {
   type      = string
-  description = "app pw"
+  description = "Applicaion Secret"
   sensitive = true
 }
 variable "subscription_id" {
   type      = string
-  description = "subscription id"
+  description = "Subscription ID"
   sensitive = true
 }
 variable "tenant_id" {
   type      = string
-  description = "directory id"
+  description = "Directory ID"
   sensitive = true
 }
 
-# 이미지가 생성될 리소스그룹(기 존재), 생성될 이미지 이름, 이미지 버전(Azure tags) - Required
+# === Required ===
+# Managed Image info
 variable "managed_image_resource_group_name" {
   type        = string
   description = "Resource Group Name, be configured before image creation"
@@ -29,29 +31,24 @@ variable "managed_image_name" {
   type        = string
   description = "Image Name"
 }
-variable "image_version" {
-  type        = string
-  description = "Metadata, Image Version by azure tags"
+
+# === Required ===
+# Influxdb info
+variable "influxdb_name" {
+  type = string
+  description = "Influxdb Database name"
+}
+variable "influxdb_username" {
+  type = string
+  description = "Influxdb Database Username"
+}
+variable "influxdb_password" {
+  type = string
+  description = "Influxdb Database Password"
 }
 
-# InfluxDB - Required
-variable "influxdb_db_name" {
-  type    = string
-  description = "InfluxDB Name"
-  sensitive = true
-}
-variable "influxdb_user_name" {
-  type      = string
-  description = "InfluxDB admin"
-  sensitive = true
-}
-variable "influxdb_user_password" {
-  type      = string
-  description = "InfluxDB admin password"
-  sensitive = true
-}
-
-# Base Image - Optional
+# === Optional === 
+# Base Image info
 variable "location" {
   type    = string
   default = "koreacentral"
@@ -75,4 +72,8 @@ variable "os_type" {
 variable "size" {
   type    = string
   default = "Standard_DS2_v2"
+}
+variable "ssh_username" {
+  type = string
+  default = "azureuser"
 }
