@@ -52,12 +52,12 @@ echo "===== Setup Telegraf Configuration ====="
 echo
 
 telegraf config > telegraf-custom.conf --output-filter=influxdb
-# IP Check tool
-apt install -y net-tools
-# get server internalip
-SERVER_IP=$(ifconfig | awk 'NR==2 {print $2}')
+# # IP Check tool
+# apt install -y net-tools
+# # get server internalip
+# SERVER_IP=$(ifconfig | awk 'NR==2 {print $2}')
 # sed telegraf-custom.conf
-sed -i "s/\# urls = \[\"http:\/\/127.0.0.1\:8086\"\]/urls = \[\"http:\/\/$SERVER_IP\:8086\"\]/" telegraf-custom.conf
+sed -i "s/\# urls = \[\"http:\/\/127.0.0.1\:8086\"\]/urls = \[\"http:\/\/127.0.0.1\:8086\"\]/" telegraf-custom.conf
 sed -i "s/\# database = \"telegraf\"/database = \"$DATABASE\"/" telegraf-custom.conf
 sed -i "s/\# username = \"telegraf\"/username = \"$DB_USERNAME\"/" telegraf-custom.conf
 sed -i "s/\# password = \"metricsmetricsmetricsmetrics\"/password = \"$DB_PASSWORD\"/" telegraf-custom.conf

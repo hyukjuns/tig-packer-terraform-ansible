@@ -1,48 +1,67 @@
 ---
-- name: Install Telegraf CentOS and Ubuntu
+- name: Install Telegraf Linux
   hosts: target
   become: yes
   tasks:
+    - name: check distro
+      debug:
+        var: ansible_distribution
+    # Ubuntu
     - block:
-        - name: Install Telegraf Agent - Ubuntu
-          apt:
-            deb: https://dl.influxdata.com/telegraf/releases/telegraf_1.18.1-1_amd64.deb
-        - name: Copy telegraf config - Ubuntu
-          copy:
-            src: ./config/telegraf.conf
-            dest: /etc/telegraf/telegraf.conf
-          notify:
-          - Restart Telegraf
-        - name: Start Telegraf - Ubuntu
-          service:
+        - name: Get influxdata repo key
+          ansible.builtin.get_url:
+              url: https://repos.influxdata.com/influxdata-archive_compat.key
+              dest: /tmp/influxdata-archive_compat.key
+        - name: Setup influxdata repo
+          ansible.builtin.shell: |
+            echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c /tmp/influxdata-archive_compat.key' | sha256sum -c && cat /tmp/influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+            echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
+        - name: Install telegraf agent
+          ansible.builtin.apt:
+            name: telegraf
+            state: present
+            update_cache: yes
+        - name: Copy telegraf config
+          ansible.builtin.copy:
+            src: /etc/telegraf/telegraf.d/telegraf-custom.conf
+            dest: /etc/telegraf/telegraf.d/telegraf-custom.conf
+        - name: Start telegraf agent
+          ansible.builtin.systemd:
             name: telegraf
             state: started
             enabled: yes
       when: ansible_distribution == "Ubuntu"
+    # CentOS
     - block:
-        - name: Download Telegraf rpm
-          get_url:
-            url: https://dl.influxdata.com/telegraf/releases/telegraf-1.18.1-1.x86_64.rpm
-            dest: /usr/local/telegraf-1.18.1-1.x86_64.rpm
-        - name: Install Telegraf Agent - CentOS
-          yum:
-            name: /usr/local/telegraf-1.18.1-1.x86_64.rpm
-            disable_gpg_check: yes
-        - name: Copy telegraf config - CentOS
-          copy:
-            src: ./config/telegraf.conf
-            dest: /etc/telegraf/telegraf.conf
-          notify:
-          - Restart Telegraf
-        - name: Start Telegraf - CentOS
-          service:
+        - name: Setup influxdata repo
+          ansible.builtin.shell: |
+            cat <<EOF | sudo tee /etc/yum.repos.d/influxdb.repo
+            [influxdb]
+            name = InfluxData Repository - Stable
+            baseurl = https://repos.influxdata.com/stable/\$basearch/main
+            enabled = 1
+            gpgcheck = 1
+            gpgkey = https://repos.influxdata.com/influxdata-archive_compat.key
+            EOF
+        - name: Install telegraf agent
+          ansible.builtin.yum:
+            name: telegraf
+            state: present
+            update_cache: true
+        - name: Copy telegraf config
+          ansible.builtin.copy:
+            src: /etc/telegraf/telegraf.d/telegraf-custom.conf
+            dest: /etc/telegraf/telegraf.d/telegraf-custom.conf
+        - name: Start telegraf agent
+          ansible.builtin.systemd:
             name: telegraf
             state: started
             enabled: yes
       when: ansible_distribution == "CentOS"
+  # Restart Handler
   handlers:
         - name: Restart Telegraf
-          ansible.builtin.service:
+          ansible.builtin.systemd:
             name: telegraf
             state: restarted
 - name: Print info

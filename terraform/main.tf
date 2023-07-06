@@ -10,6 +10,9 @@ terraform {
 provider "azurerm" {
   features {}
 }
+provider "template" {
+  
+}
 
 # Resource Group
 resource "azurerm_resource_group" "monitor" {
@@ -72,6 +75,14 @@ resource "azurerm_linux_virtual_machine" "monitor" {
     storage_account_type = "Standard_LRS"
   }
   source_image_id = var.source_image_id
+  
+  # Shell script - edit telegraf.conf 
+  custom_data    = base64encode(data.template_file.custom.rendered)
+}
+
+# Shell script - edit telegraf.conf 
+data "template_file" "custom" {
+  template = file("custom.sh")
 }
 
 # NSG

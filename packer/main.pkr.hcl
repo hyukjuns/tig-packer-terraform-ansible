@@ -17,7 +17,6 @@ source "azure-arm" "monitor" {
   os_type         = "${var.os_type}"
   vm_size         = "${var.size}"
   ssh_username    = "${var.ssh_username}"
-
 }
 
 build {
@@ -28,12 +27,18 @@ build {
     source = "software.sh"
     destination = "/tmp/software.sh"
   }
+  # Copy Ansible workspace
+  provisioner "file" {
+    source = "../ansible"
+    destination = "/tmp/"
+  }
 
-  # Excute Script
+  # Copy ansible workspace and Excute Script
   provisioner "shell" {
     execute_command = "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'"
     inline_shebang  = "/bin/bssh -x"
     inline = [
+      "cp -r /tmp/ansible /opt/",
       "chmod +x /tmp/software.sh",
       "/tmp/software.sh ${var.influxdb_name} ${var.influxdb_username} ${var.influxdb_password}"
     ]

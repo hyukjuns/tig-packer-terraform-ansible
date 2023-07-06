@@ -30,3 +30,9 @@ Provisiong Monitoring VM
     terraform plan
     terraform apply
     ```
+# Info
+### custom.sh
+Edit telegraf config file > insert monitor server's private ip to outputs.influxdb block
+
+### dependency
+```cusotm.sh > template_file.custom > azurerm_linux_virtual_machine.custom_data```
