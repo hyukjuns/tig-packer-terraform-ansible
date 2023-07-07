@@ -5,11 +5,14 @@ Provisiong Monitoring VM
 ### Prerequire
 
 - **Azure Account login in shell**
-    terraform's auth method is azcli credential (in user's shell)
-- **Source Image ID**
-    Managed Image ID (made by packer)
+    
+    테라폼을 실행하는 쉘에서 Azure에 로그인해주세요, 테라폼 자격증명으로 사용합니다.
 
-### Steps
+- **Source Image ID**
+    
+    패커로 빌드한 Managed Image의 ID가 필요합니다.
+
+### Step
 1. Edit terraoform.tfvars
 
     ```
@@ -32,7 +35,7 @@ Provisiong Monitoring VM
     ```
 # Info
 ### custom.sh
-Edit telegraf config file > insert monitor server's private ip to outputs.influxdb block
+telegraf.conf 파일을 수정하는 스크립트 입니다. 모니터링 서버의 Private IP를 conf 파일에 넣어줍니다.
 
 ### dependency
 ```cusotm.sh > template_file.custom > azurerm_linux_virtual_machine.custom_data```

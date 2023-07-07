@@ -5,15 +5,13 @@ Make Monitoring VM Image
 ### Prerequire
 - **Azure App registration**
     
-    Using by packer,
-
-    To use packer's Pre-vm provisioning and make Managed Image
+    Azure Service Principal, Packer가 이미지 빌드시 사용합니다.
 
 - **Azure Resourece Group**<br>
     
-    To use making Pakcer's Managed Image
+    Packer로 만든 관리 이미지가 저장되는 리소스 그룹입니다.
 
-### Steps
+### Step
 1. Edit variables.pkrvars.hcl
 
     ```
@@ -41,7 +39,7 @@ Make Monitoring VM Image
 
     ```packer build -var-file=variables.pkrvars.hcl .```
 
-4. Keep Managed Image's Id to use Terraform Provisionig
+>Output으로 나오는 Managed Image ID를 메모해주세요, 테라폼으로 VM 배포할때 사용합니다.
 
 # Info
 ### Software Versions

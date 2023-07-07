@@ -1,18 +1,27 @@
 # Install TIG Stack by Packer, Terraform, Ansible
-Provisiong TIG Stack by Packer, Terraform. Ansible
+
+Provisiong TIG Stack by Packer, Terraform. Ansible <br>
+
+**Build** VM Image by Packer, <br>
+**Provisioning** VM by Terraform, <br>
+**Deploy** telegraf agent by Ansible
+
 
 # Evironment
 ### Infra
-- Azure
+- Azure Cloud
+
+### Virtual Machine (Monitor Server) Spec
+- SKU: Standard_DS2_v2 (2 vCPU, 7 GiB Mem)
+- OSL Linux
+- Distro: Ubuntu 20.04 (Azure Image URN: Canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:20.04.202307010)
+
 ### Tool
 - Packer > v1.9.1
 - Terraform > v1.4.6
 - Ansible stable latest
 - Shell Script (Bash)
 
-### Monitor Virtual Machine
-- SKU: Standard_DS2_v2 (2 vCPU, 7 GiB Mem)
-- Base Image: Ubuntu 20.04, urn -> Canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:20.04.202307010
 
 ### Softwares
 - influxdb v1.8.10
@@ -20,12 +29,13 @@ Provisiong TIG Stack by Packer, Terraform. Ansible
 - grafana stable latest
 - ansilbe stable latest
 
-# Prerequire
+# Usage
+## Prerequire
 - Azure Account
 - macOS or WSL2 Terminal, VSCode
 - packer, terraform in Local PC
 
-# Usage
+## Step
 1. [Packer](packer) build monitoring vm image
 2. [Terraform](terraform) provisioning virtual machine
 3. [Ansible](ansible) deploy telegraf
