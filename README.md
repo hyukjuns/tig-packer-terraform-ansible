@@ -5,7 +5,7 @@ Provisiong TIG Stack by Packer, Terraform. Ansible <br>
 **Build** VM Image by Packer, <br>
 **Provisioning** VM by Terraform, <br>
 **Deploy** telegraf agent by Ansible
-
+![tigstack](_img/tigstack.png)
 
 # Evironment
 ### Infra
