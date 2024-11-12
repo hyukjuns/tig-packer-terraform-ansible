@@ -69,4 +69,4 @@ Provisiong TIG Stack by Packer, Terraform. Ansible <br>
     - TIG Stack by Terraform and Ansible
     - Terraform -> Provisioning Monitor Server
     - Ansible -> playbook_1: Deploy InfluxDB, Grafana, Ansible to Monitor Server
-    - Ansible -> playbook_2: Deploy Telegraf Agents to Nonitoring Target Servers
+    - Ansible -> playbook_2: Deploy Telegraf Agents to Monitoring Target Servers
